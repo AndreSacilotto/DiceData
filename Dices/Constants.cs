@@ -4,6 +4,9 @@ namespace Dices
 {
     public static class Constants
     {
+        public const string PLUS_SEPARATOR = " + ";
+        public const string LESS_SEPARATOR = " - ";
+
         public static readonly int[] CommomDices = new int[] { 4, 6, 8, 10, 12, 20 };
 
         public static readonly HashSet<int> ValidDice = new(

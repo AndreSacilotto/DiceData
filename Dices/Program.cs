@@ -1,7 +1,5 @@
 ﻿using Dices;
 using System;
-using System.Linq;
-using System.Text;
 using static System.Console;
 
 class Program
@@ -21,8 +19,15 @@ class Program
     [STAThread]
     public static void Main()
     {
-        //DiceConverter.Run(() => DiceConverter.DoubleLess(), false);
+        //DiceConverter.Run(() => DiceConverter.AnyLess(2, 3));
         //DiceTable.Run();
+
+        //NumberCombinator.Run(15);
+
+        //int min = 1;
+        //int max = 12;
+        //for (int i = 2; i <= 4; i++)
+        //    WriteLine($"({i}) " + NumberCombinator.DiceComb(max, i));
 
         //while (true)
         //{
@@ -34,7 +39,5 @@ class Program
         //    Clipboard.SetClipboard(data.ToExcelAv());
         //    WriteLine();
         //}
-
-        WriteLine(NumberCombinator.DiceComb(3, 12, 3));
     }
 }

@@ -6,10 +6,9 @@ namespace Dices
 {
     public static class DiceTable
     {
-        public static void Run()
+        public static void Run(int any = 3)
         {
-            var result = SimpleAny(3);
-
+            var result = SimpleAny(any);
             Console.WriteLine(result.ToString());
         }
 

@@ -24,7 +24,7 @@ namespace Dices
                 result += rng.Next(1, max);
             return result + modifier;
         }
-        
+
         public static string[] Separate(string rollStr)
         {
             if (string.IsNullOrWhiteSpace(rollStr))

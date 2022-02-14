@@ -1,44 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using static Dices.Constants;
 
 namespace Dices
 {
-    public static class NumberCombinator
+    public static class DiceCombinator
     {
-        private class ReturnComb
+
+        public class ReturnComb
         {
             public List<int[]> arrList = new();
             public void AddComb(params int[] items) => arrList.Add(items);
             public int[][] ToArray() => arrList.ToArray();
         }
 
-        public static void Run(int value)
+        public static string Run(int max, int diceCount)
         {
-            var sb = new StringBuilder();
-            for (int i = 2; i <= 4; i++)
+            var target = max;
+            //int plus = min - diceCount;
+
+            const string separator = " + ";
+            var sb = new StringBuilder(target + ":" + "\r\n");
+            var comb = CombPlus(target, diceCount, 12, 4, 2, 0).ToArray();
+            foreach (var arr in comb)
             {
-                Console.WriteLine($"({i}) {value}:");
-                var v = CombPlus(value, i, value, 1).ToArray();
-                foreach (var item in v)
+                string str = "";
+                int sum = 0;
+                foreach (var el in arr)
                 {
-                    sb.Clear();
-                    foreach (var el in item)
-                        sb.Append(el + PLUS_SEPARATOR);
-                    Console.WriteLine(sb.ToString()[..^PLUS_SEPARATOR.Length]);
+                    sum += el;
+                    str += el + separator;
                 }
-                Console.WriteLine();
+                str = $"{str[..^separator.Length]} + '{arr.Length}' = {sum + arr.Length} = {(sum + arr.Length) / 2f:0.0}";
+                sb.AppendLine($"{str}");
             }
+            return sb.ToString();
         }
 
-        public static int[][] CombPlus(int targetValue, int searchCount, int end, int start = 0, int step = 1, int plus = 0)
+        public static ReturnComb CombPlus(int targetValue, int searchCount, int end, int start = 0, int step = 1, int plus = 0)
         {
             var rc = new ReturnComb();
             int[] buffer = new int[searchCount];
             CombPlusRecursive(rc, buffer, targetValue, 0, searchCount, start, end, step, plus);
-            return rc.ToArray();
+            return rc;
         }
 
         private static void CombPlusRecursive(ReturnComb rc, int[] buffer, int target, int index, int depth, int start, int end, int step, int plus)

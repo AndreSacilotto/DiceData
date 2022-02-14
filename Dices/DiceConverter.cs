@@ -6,14 +6,15 @@ namespace Dices
 {
     public static class DiceConverter
     {
+
+        #region DICT
+
         public struct DiceResult
         {
-            public readonly int dice;
             public readonly string result;
             public readonly string formula;
-            public DiceResult(int dice, string result, string formula)
+            public DiceResult(string result, string formula)
             {
-                this.dice = dice;
                 this.result = result;
                 this.formula = formula;
             }
@@ -21,12 +22,10 @@ namespace Dices
 
         const int MAX_DICE = 10;
 
-        private static bool IsValid(int value) => ValidDice.Contains(value);
-
-        private static void DictAdd(Dictionary<int, List<DiceResult>> dict, int result, int dice, string resultStr, string formula)
+        private static void DictAdd(Dictionary<int, List<DiceResult>> dict, int result, string formula)
         {
-            if (IsValid(result))
-                dict[result].Add(new DiceResult(dice, resultStr, formula));
+            if (ValidDice.Contains(result))
+                dict[result].Add(new DiceResult("D" + result, formula));
         }
 
         private static Dictionary<int, List<T>> NewResultDict<T>()
@@ -37,40 +36,19 @@ namespace Dices
             return dict;
         }
 
-        #region MAIN
+        #endregion
 
-        public static void Run(Func<Dictionary<int, List<DiceResult>>> act, bool mode)
+        public static void Run(Func<Dictionary<int, List<DiceResult>>> act)
         {
             var dict = act();
-            if (mode)
-            {
-                var diceDict = new Dictionary<int, List<string>>(CommomDices.Length);
-                foreach (var el in CommomDices)
-                    diceDict.Add(el, new List<string>());
-                foreach (var item in dict.Values)
-                    foreach (var el in item)
-                        diceDict[el.dice].Add(el.formula);
-                foreach (var item in diceDict)
+            foreach (var item in dict)
+                if (item.Value.Count > 0)
                 {
-                    Console.WriteLine($"\n--{item.Key}--\n");
+                    Console.WriteLine($"\n-----D{item.Key}-----\n");
                     foreach (var el in item.Value)
-                        Console.WriteLine(el);
+                        Console.WriteLine(el.formula);
                 }
-            }
-            else
-            {
-                foreach (var item in dict)
-                    if (item.Value.Count > 0)
-                    {
-                        Console.WriteLine($"\n---D{item.Key}---\n");
-                        foreach (var el in item.Value)
-                            Console.WriteLine(el.formula);
-                    }
-            }
-
         }
-
-        #endregion
 
         public static Dictionary<int, List<DiceResult>> Division()
         {
@@ -83,66 +61,103 @@ namespace Dices
                     var result = d / t;
                     var ceil = (int)Math.Ceiling(result);
                     if (d % t == 0)
-                        DictAdd(dict, ceil, (int)d, $"D{result}", $"D{d} / {t}");
+                        DictAdd(dict, ceil, $"D{d} / {t}");
                 }
             }
             return dict;
         }
 
-        public static Dictionary<int, List<DiceResult>> Less()
+        public static Dictionary<int, List<DiceResult>> OneLess(int maxDices = MAX_DICE)
         {
             var dict = NewResultDict<DiceResult>();
             for (int i = 0; i < CommomDices.Length; i++)
             {
                 int d = CommomDices[i];
-                for (int t = 2; t <= MAX_DICE; t++)
+                for (int t = 2; t <= maxDices; t++)
                 {
-                    int result = d * t - (t - 1);
-                    DictAdd(dict, result, d, $"D{result}", $"{t}D{d} - {t - 1}");
+                    int diceCount = t - 1;
+                    int result = d * t - diceCount;
+                    DictAdd(dict, result, $"{t}D{d} - {diceCount}");
                 }
             }
             return dict;
         }
 
-        public static Dictionary<int, List<DiceResult>> DoubleLess()
+        public static Dictionary<int, List<DiceResult>> AnyLess(int depth = 1, int maxDices = MAX_DICE)
         {
-            int len = CommomDices.Length;
             var dict = NewResultDict<DiceResult>();
-            for (int i = 0; i < len; i++)
+            AnyLessRecursive(dict, new int[depth], new int[depth], maxDices, 0, 0);
+            return dict;
+        }
+
+        private static void AnyLessRecursive(Dictionary<int, List<DiceResult>> dict, int[] bufferDice, int[] bufferTimes, int maxDices, int index, int start = 0)
+        {
+            if (index >= bufferDice.Length)
+                return;
+            bool isLast = index + 1 >= bufferDice.Length;
+
+            for (int i = start; i < CommomDices.Length; i++)
             {
-                for (int j = i + 1; j < len; j++)
+                bufferDice[index] = CommomDices[i];
+                for (int k = 1; k <= maxDices; k++)
                 {
-                    if (i == j)
-                        continue;
-                    int a, b;
-                    for (b = 1; b <= MAX_DICE / 2; b++)
+                    bufferTimes[index] = k;
+                    if (isLast)
                     {
-                        for (a = 1; a + b <= MAX_DICE / 2; a++)
+                        int sum = 0, diceCount = -1;
+                        string str = "";
+                        for (int b = 0; b < bufferTimes.Length; b++)
                         {
-                            var result = a * CommomDices[i] + b * CommomDices[j] - (a + b - 1);
-                            var str = $"{(a == 1 ? "" : a)}D{CommomDices[i]} + {(b == 1 ? "" : b)}D{CommomDices[j]} - {a + b - 1}";
-                            DictAdd(dict, result, CommomDices[i], $"D{result}", str);
+                            sum += bufferDice[b] * bufferTimes[b];
+                            diceCount += bufferTimes[b];
+                            str += (bufferTimes[b] == 1 ? "" : bufferTimes[b].ToString()) + 'D' + bufferDice[b] + PLUS_SEPARATOR;
                         }
+                        sum -= diceCount;
+                        str = str[..^PLUS_SEPARATOR.Length] + LESS_SEPARATOR + diceCount;
+                        DictAdd(dict, sum, str);
                     }
-
+                    AnyLessRecursive(dict, bufferDice, bufferTimes, maxDices, index + 1, i+1);
                 }
             }
-            return dict;
+
+
         }
 
-        public static Dictionary<int, List<DiceResult>> SimpleTripleLess()
+
+
+
+        public static Dictionary<int, List<DiceResult>> SimpleAnyLess(int depth = 3)
         {
-            int len = CommomDices.Length;
             var dict = NewResultDict<DiceResult>();
-            for (int i = 0; i < len; i++)
-                for (int j = i + 1; j < len; j++)
-                    for (int k = j + 1; k < len; k++)
-                    {
-                        var result = CommomDices[i] + CommomDices[j] + CommomDices[k] - 2;
-                        var str = $"D{CommomDices[i]} + D{CommomDices[j]} + D{CommomDices[k]} - 2";
-                        DictAdd(dict, result, CommomDices[i], $"D{result}", str);
-                    }
+            SimpleAnyLessRecursive(dict, new int[depth], 0, 0);
             return dict;
+        }
+        private static void SimpleAnyLessRecursive(Dictionary<int, List<DiceResult>> dict, int[] buffer, int index, int start = 0)
+        {
+            if (index >= buffer.Length)
+                return;
+
+            bool isLast = index + 1 >= buffer.Length;
+            for (int i = start; i < CommomDices.Length; i++)
+            {
+                buffer[index] = CommomDices[i];
+                if (isLast)
+                {
+                    int diceCount = buffer.Length - 1;
+                    int sum = 0;
+                    string str = "";
+                    foreach (var el in buffer)
+                    {
+                        sum += el;
+                        str += "D" + el + PLUS_SEPARATOR;
+                    }
+                    sum -= diceCount;
+                    str = str[..^PLUS_SEPARATOR.Length] + LESS_SEPARATOR + diceCount;
+                    DictAdd(dict, sum, str);
+                }
+
+                SimpleAnyLessRecursive(dict, buffer, index + 1, i);
+            }
         }
 
     }
