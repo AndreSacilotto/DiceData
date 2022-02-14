@@ -19,25 +19,15 @@ class Program
     [STAThread]
     public static void Main()
     {
-        //DiceConverter.Run(() => DiceConverter.AnyLess(2, 3));
-        //DiceTable.Run();
+        //DiceConverter.Print(() => DiceConverter.AnyLess(2, 3));
+        //DiceTable.Print();
 
-        //NumberCombinator.Run(15);
+        //NumberCombinator.Print(15);
 
         //int min = 1;
         //int max = 12;
         //for (int i = 2; i <= 4; i++)
         //    WriteLine($"({i}) " + NumberCombinator.DiceComb(max, i));
 
-        //while (true)
-        //{
-        //    var str = ReadLine();
-        //    if (string.IsNullOrEmpty(str))
-        //        break;
-        //    var data = DiceString.Run(str);
-        //    WriteLine(data.ToTextAv());
-        //    Clipboard.SetClipboard(data.ToExcelAv());
-        //    WriteLine();
-        //}
     }
 }

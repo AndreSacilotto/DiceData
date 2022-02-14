@@ -38,7 +38,7 @@ namespace Dices
 
         #endregion
 
-        public static void Run(Func<Dictionary<int, List<DiceResult>>> act)
+        public static void Print(Func<Dictionary<int, List<DiceResult>>> act)
         {
             var dict = act();
             foreach (var item in dict)
@@ -89,7 +89,6 @@ namespace Dices
             AnyLessRecursive(dict, new int[depth], new int[depth], maxDices, 0, 0);
             return dict;
         }
-
         private static void AnyLessRecursive(Dictionary<int, List<DiceResult>> dict, int[] bufferDice, int[] bufferTimes, int maxDices, int index, int start = 0)
         {
             if (index >= bufferDice.Length)
@@ -122,9 +121,6 @@ namespace Dices
 
 
         }
-
-
-
 
         public static Dictionary<int, List<DiceResult>> SimpleAnyLess(int depth = 3)
         {

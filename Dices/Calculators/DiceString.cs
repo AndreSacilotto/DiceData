@@ -8,9 +8,21 @@ namespace Dices
         public static DiceData Run(string rollString)
         {
             string[] rollsArr = Separate(rollString);
-            if (rollsArr == null)
-                return DiceData.Zero;
-            return Calculate(rollsArr);
+            if (rollsArr != null)
+                return ReadRoll(rollsArr);
+            return DiceData.Zero;
+        }
+
+        public static void ReadConsole(bool setClipboard = false)
+        {
+            var str = Console.ReadLine();
+            if (string.IsNullOrEmpty(str))
+                return;
+            var data = Run(str);
+            Console.WriteLine(data.ToTextAv());
+            if(setClipboard)
+                Clipboard.SetClipboard(data.ToExcelAv());
+            Console.WriteLine();
         }
 
         public static int RollDieFromString(in string rollStr, int modifier = 0)
@@ -24,6 +36,7 @@ namespace Dices
                 result += rng.Next(1, max);
             return result + modifier;
         }
+        public static bool IsValidRoll(in string rollStr) => Regex.IsMatch(rollStr, @"^[+-]?(\d*?[dD]\d+|\d+)$");
 
         public static string[] Separate(string rollStr)
         {
@@ -60,11 +73,8 @@ namespace Dices
                 max = max * times,
             };
         }
-
-        public static bool IsValidRoll(in string rollStr) => Regex.IsMatch(rollStr, @"^[+-]?(\d*?[dD]\d+|\d+)$");
-
         private static bool IsDiceRoll(in string rollStr) => rollStr.Contains("d", StringComparison.OrdinalIgnoreCase);
-        public static DiceData Calculate(string[] rolls)
+        public static DiceData ReadRoll(string[] rolls)
         {
             DiceData data = DiceData.Zero;
             if (rolls == null || rolls.Length < 1)

@@ -15,7 +15,7 @@ namespace Dices
             public int[][] ToArray() => arrList.ToArray();
         }
 
-        public static void Run(int value)
+        public static void Print(int value)
         {
             var sb = new StringBuilder();
             for (int i = 2; i <= 4; i++)
