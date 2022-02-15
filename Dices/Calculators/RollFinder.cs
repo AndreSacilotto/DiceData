@@ -14,38 +14,34 @@ namespace Dices
                 long sum = 0;
                 for (int i = 0; i < arr.Length; i++)
                 {
-                    var el = arr[i];
-                    sum += el.Calculate();
-                    tempSb.Append(el + PLUS_SEPARATOR);
+                    sum += arr[i].Calculate();
+                    tempSb.Append(arr[i] + PLUS_SEPARATOR);
                 }
                 tempSb.Length -= PLUS_SEPARATOR.Length;
-                //tempSb.Length -= tempSb[^1] == '0' ? PLUS_SEPARATOR.Length + 1 : 0;
-                sb.AppendLine(tempSb + " = " + sum);
+                sb.AppendLine(tempSb + "");// + " = " + sum);
                 tempSb.Clear();
             }
 
             Console.WriteLine(sb.ToString());
         }
 
-        public static void Print(int min, int max, int diceDepth = 1)
+        public static void Print(int min, int max, int diceDepth = 1, int maxT = 3)
         {
             var mm = min + max;
-            var sb = new StringBuilder($"[{diceDepth}] | {min}..{max} = {mm} | {mm / 2f:0.#}:\r\n");
-            var rf = CombPlus(min, max, diceDepth);
+            var sb = new StringBuilder($"[{diceDepth}] | {min}..{max} | {mm} {mm / 2f:0.#}:\r\n");
+            var rf = CombPlus(min, max, diceDepth, maxT, maxT);
             Print(rf, sb);
         }
 
         public static ReturnDiscoveries CombPlus(int min, int max, int diceQuant, int diceTimes = HALF_TIMES, int maxMod = HALF_TIMES)
         {
-            var target = min + max;
-
             var rc = new ReturnDiscoveries();
             var buffer = new RollData[diceQuant];
-            CombPlusRecursive(rc, buffer, diceTimes, maxMod, target, 0, 0);
+            CombPlusRecursive(rc, buffer, diceTimes, maxMod, min, max, 0, 0);
             return rc;
         }
 
-        private static void CombPlusRecursive(ReturnDiscoveries rc, RollData[] buffer, int maxTimes, int maxMod, int target, int index, int start)
+        private static void CombPlusRecursive(ReturnDiscoveries rc, RollData[] buffer, int maxTimes, int maxMod, int min, int max, int index, int start)
         {
             if (index >= buffer.Length)
                 return;
@@ -59,17 +55,23 @@ namespace Dices
                     buffer[index].times = t;
                     if (isLast)
                     {
+                        var diceCount = 0;
                         long sum = 0;
                         foreach (var el in buffer)
+                        {
                             sum += el.CalculateNoMod();
+                            diceCount += (int)el.times;
+                        }
                         for (int m = -maxMod; m < maxMod; m++)
                         {
-                            buffer[index].mod = m;
-                            if (sum + m == target)
+                            if (diceCount + m == min && sum + m == max)
+                            {
+                                buffer[index].mod = m;
                                 rc.AddComb((RollData[])buffer.Clone());
+                            }
                         }
                     }
-                    CombPlusRecursive(rc, buffer, maxTimes, maxMod, target, index + 1, i + 1);
+                    CombPlusRecursive(rc, buffer, maxTimes, maxMod, min, max, index + 1, i + 1);
                 }
             }
 
