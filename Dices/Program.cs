@@ -1,6 +1,5 @@
 ﻿using Dices;
 using System;
-using static System.Console;
 
 class Program
 {
@@ -19,15 +18,16 @@ class Program
     [STAThread]
     public static void Main()
     {
-        //DiceConverter.Print(() => DiceConverter.AnyLess(2, 3));
-        //DiceTable.Print();
+        //DiceConverter.Print(() => DiceConverter.AnyLess(2, 5));
+        //DiceTable.Print(2);
 
-        //NumberCombinator.Print(15);
+        //NumberFinder.PrintWithNeg(15);
 
-        //int min = 1;
-        //int max = 12;
-        //for (int i = 2; i <= 4; i++)
-        //    WriteLine($"({i}) " + NumberCombinator.DiceComb(max, i));
+        int min = 1;
+        int max = 18;
+        RollFinder.Print(min, max, 2);
+        //for (int i = 2; i <= 3; i++)
+        //    DiceFinder.Print(min, max, i);
 
     }
 }

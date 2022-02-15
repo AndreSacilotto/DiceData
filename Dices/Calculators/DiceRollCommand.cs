@@ -20,7 +20,7 @@ namespace Dices
                 return;
             var data = Run(str);
             Console.WriteLine(data.ToTextAv());
-            if(setClipboard)
+            if (setClipboard)
                 Clipboard.SetClipboard(data.ToExcelAv());
             Console.WriteLine();
         }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using static Dices.Constants;
@@ -8,13 +7,6 @@ namespace Dices
 {
     public static class NumberFinder
     {
-        private class ReturnFinds
-        {
-            public List<int[]> arrList = new();
-            public void AddComb(params int[] items) => arrList.Add(items);
-            public int[][] ToArray() => arrList.ToArray();
-        }
-
         public static void Print(int value)
         {
             var sb = new StringBuilder();
@@ -34,12 +26,12 @@ namespace Dices
         }
         public static int[][] CombPlus(int targetValue, int searchCount, int end, int start = 1, int step = 1, int mod = 0)
         {
-            var rc = new ReturnFinds();
+            var rc = new ReturnFinds<int>();
             int[] buffer = new int[searchCount];
             CombPlusRecursive(rc, buffer, targetValue, 0, start, end, step, mod);
             return rc.ToArray();
         }
-        private static void CombPlusRecursive(ReturnFinds rc, int[] buffer, int target, int index, int start, int end, int step, int mod)
+        private static void CombPlusRecursive(ReturnFinds<int> rc, int[] buffer, int target, int index, int start, int end, int step, int mod)
         {
             if (index >= buffer.Length)
                 return;
@@ -82,12 +74,12 @@ namespace Dices
         }
         public static int[][] Comb(int targetValue, int searchDepth, int end, int step = 1, int mod = 0)
         {
-            var rc = new ReturnFinds();
+            var rc = new ReturnFinds<int>();
             int[] buffer = new int[searchDepth * 2 - 1];
             CombRecursive(rc, buffer, targetValue, 0, searchDepth, -end, end, step, mod);
             return rc.ToArray();
         }
-        private static void CombRecursive(ReturnFinds rc, int[] buffer, int target, int index, int depth, int start, int end, int step, int mod)
+        private static void CombRecursive(ReturnFinds<int> rc, int[] buffer, int target, int index, int depth, int start, int end, int step, int mod)
         {
             if (index >= buffer.Length)
                 return;

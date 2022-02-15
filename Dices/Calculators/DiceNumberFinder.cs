@@ -4,7 +4,7 @@ using static Dices.Constants;
 
 namespace Dices
 {
-    public static class RollFinder
+    public static class DiceNumberFinder
     {
         private static void Print(ReturnDiscoveries rf, StringBuilder sb)
         {
@@ -19,26 +19,22 @@ namespace Dices
                     tempSb.Append(el + PLUS_SEPARATOR);
                 }
                 tempSb.Length -= PLUS_SEPARATOR.Length;
-                //tempSb.Length -= tempSb[^1] == '0' ? PLUS_SEPARATOR.Length + 1 : 0;
-                sb.AppendLine(tempSb + " = " + sum);
+                sb.AppendLine(tempSb + "");// + " = " + sum);
                 tempSb.Clear();
             }
 
             Console.WriteLine(sb.ToString());
         }
 
-        public static void Print(int min, int max, int diceDepth = 1)
+        public static void Print(int target, int diceDepth = 1, int maxT = 3)
         {
-            var mm = min + max;
-            var sb = new StringBuilder($"[{diceDepth}] | {min}..{max} = {mm} | {mm / 2f:0.#}:\r\n");
-            var rf = CombPlus(min, max, diceDepth);
+            var sb = new StringBuilder($"[{diceDepth}] | {target} | {target / 2f:0.#}:\r\n");
+            var rf = CombPlus(target, diceDepth, maxT, maxT);
             Print(rf, sb);
         }
 
-        public static ReturnDiscoveries CombPlus(int min, int max, int diceQuant, int diceTimes = HALF_TIMES, int maxMod = HALF_TIMES)
+        public static ReturnDiscoveries CombPlus(int target, int diceQuant, int diceTimes = HALF_TIMES, int maxMod = HALF_TIMES)
         {
-            var target = min + max;
-
             var rc = new ReturnDiscoveries();
             var buffer = new RollData[diceQuant];
             CombPlusRecursive(rc, buffer, diceTimes, maxMod, target, 0, 0);
@@ -62,7 +58,7 @@ namespace Dices
                         long sum = 0;
                         foreach (var el in buffer)
                             sum += el.CalculateNoMod();
-                        for (int m = -maxMod; m < maxMod; m++)
+                        for (int m = -maxMod; m <= maxMod; m++)
                         {
                             buffer[index].mod = m;
                             if (sum + m == target)
