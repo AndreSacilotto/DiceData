@@ -6,7 +6,7 @@ namespace Dices
 {
     public static class RollFinder
     {
-        private static void Print(ReturnDiscoveries rf, StringBuilder sb)
+        private static string Print(ReturnDiscoveries rf, StringBuilder sb)
         {
             var tempSb = new StringBuilder();
             foreach (var arr in rf.ToArray())
@@ -23,6 +23,7 @@ namespace Dices
             }
 
             Console.WriteLine(sb.ToString());
+            return sb.ToString();
         }
 
         public static void Print(int min, int max, int diceDepth = 1, int maxT = 3)

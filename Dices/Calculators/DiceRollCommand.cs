@@ -16,13 +16,14 @@ namespace Dices
         public static void ReadConsole(bool setClipboard = false)
         {
             var str = Console.ReadLine();
-            if (string.IsNullOrEmpty(str))
-                return;
-            var data = Run(str);
-            Console.WriteLine(data.ToTextAv());
-            if (setClipboard)
-                Clipboard.SetClipboard(data.ToExcelAv());
-            Console.WriteLine();
+            if (!string.IsNullOrEmpty(str))
+            {
+                var data = Run(str);
+                Console.WriteLine(data.ToTextAv());
+                if (setClipboard)
+                    Clipboard.PushString(data.ToExcelAv());
+                Console.WriteLine();
+            }
         }
 
         public static int RollDieFromString(in string rollStr, int modifier = 0)

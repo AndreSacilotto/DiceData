@@ -1,5 +1,7 @@
 ﻿using Dices;
 using System;
+using System.Globalization;
+using System.Threading;
 
 class Program
 {
@@ -18,16 +20,14 @@ class Program
     [STAThread]
     public static void Main()
     {
-        //DiceConverter.Print(() => DiceConverter.AnyLess(2, 5));
-        //DiceTable.Print(2);
+        Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
 
-        //NumberFinder.PrintWithNeg(15);
+        //int min = 5;
+        //int max = 32;
+        //RollFinder.Print(min, max, 3, 5);
 
-        int min = 1;
-        int max = 18;
-        RollFinder.Print(min, max, 2);
-        //for (int i = 2; i <= 3; i++)
-        //    DiceFinder.Print(min, max, i);
 
+        while (true)
+            DiceRollCommand.ReadConsole(true);
     }
 }
