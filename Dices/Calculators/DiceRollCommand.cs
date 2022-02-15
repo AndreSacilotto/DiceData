@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace Dices
 {
-    public static class DiceString
+    public static class DiceRollCommand
     {
         public static DiceData Run(string rollString)
         {
