@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
-using static Dices.Constants;
+using static Dices.DiceConstants;
+using static Dices.DiceString;
 
 namespace Dices
 {
@@ -26,23 +27,23 @@ namespace Dices
             return sb.ToString();
         }
 
-        public static void Print(int min, int max, int diceDepth = 1, int maxT = 3)
+        public static void Print(int min, int max, int diceDepth = 1, int maxDices = 3, int maxMod = 5)
         {
             var mm = min + max;
             var sb = new StringBuilder($"[{diceDepth}] | {min}..{max} | {mm} {mm / 2f:0.#}:\r\n");
-            var rf = CombPlus(min, max, diceDepth, maxT, maxT);
+            var rf = CombPlus(min, max, diceDepth, maxDices, maxMod);
             Print(rf, sb);
         }
 
         public static ReturnDiscoveries CombPlus(int min, int max, int diceQuant, int diceTimes = HALF_TIMES, int maxMod = HALF_TIMES)
         {
             var rc = new ReturnDiscoveries();
-            var buffer = new RollData[diceQuant];
+            var buffer = new SimpleRollData[diceQuant];
             CombPlusRecursive(rc, buffer, diceTimes, maxMod, min, max, 0, 0);
             return rc;
         }
 
-        private static void CombPlusRecursive(ReturnDiscoveries rc, RollData[] buffer, int maxTimes, int maxMod, int min, int max, int index, int start)
+        private static void CombPlusRecursive(ReturnDiscoveries rc, SimpleRollData[] buffer, int maxTimes, int maxMod, int min, int max, int index, int start)
         {
             if (index >= buffer.Length)
                 return;
@@ -63,12 +64,12 @@ namespace Dices
                             sum += el.CalculateNoMod();
                             diceCount += (int)el.times;
                         }
-                        for (int m = -maxMod; m < maxMod; m++)
+                        for (int m = -maxMod; m <= maxMod; m++)
                         {
                             if (diceCount + m == min && sum + m == max)
                             {
                                 buffer[index].mod = m;
-                                rc.AddComb((RollData[])buffer.Clone());
+                                rc.AddComb((SimpleRollData[])buffer.Clone());
                             }
                         }
                     }

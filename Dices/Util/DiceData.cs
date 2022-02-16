@@ -7,17 +7,17 @@ namespace Dices
     {
         public static DiceData Zero => new();
 
-        public string name;
+        public string formula;
         public int count;
         public int min;
         public int max;
 
         public float Average() => (max + min) / 2f;
-        public string ToText() => $"{name,-12} {count,-4} {min,-4} {max,-4}";
-        public string ToTextAv() => $"{name,-12} {min,-4} {max,-4} {Average(),-4:0.0}";
+        public string ToText() => $"{formula,-12} {count,-4} {min,-4} {max,-4}";
+        public string ToTextAv() => $"{formula,-12} {min,-4} {max,-4} {Average(),-4:0.0}";
 
-        public string ToExcel() => $"{name}\t{count}\t{min}\t{max}";
-        public string ToExcelAv() => $"{name}\t{min}\t{max}\t{Average():0.0}";
+        public string ToExcel() => $"{formula}\t{count}\t{min}\t{max}";
+        public string ToExcelAv() => $"{formula}\t{min}\t{max}\t{Average():0.0}";
 
         public static DiceData operator -(DiceData other)
         {
@@ -25,12 +25,12 @@ namespace Dices
             other.min -= other.min;
             other.max -= other.max;
 
-            var sb = new StringBuilder(other.name);
+            var sb = new StringBuilder(other.formula);
 
             if (sb[0] != '-' && sb[0] != '+')
                 sb.Insert(0, '+');
 
-            for (int i = 0; i < other.name.Length; i++)
+            for (int i = 0; i < other.formula.Length; i++)
             {
                 if (sb[i] == '+')
                 {
@@ -51,7 +51,7 @@ namespace Dices
             //lh.count += rh.count;
             lh.min += rh.min;
             lh.max += rh.max;
-            lh.name += rh.name;
+            lh.formula += rh.formula;
             return lh;
         }
 
@@ -60,7 +60,7 @@ namespace Dices
             //lh.count -= rh.count;
             lh.min -= rh.min;
             lh.max -= rh.max;
-            lh.name += rh.name;
+            lh.formula += rh.formula;
             return lh;
         }
 
@@ -68,7 +68,7 @@ namespace Dices
         {
             lh.min += rh;
             lh.max += rh;
-            lh.name += rh.ToString("+0;-#");
+            lh.formula += rh.ToString("+0;-#");
             return lh;
         }
 
@@ -76,7 +76,7 @@ namespace Dices
         {
             lh.min -= rh;
             lh.max -= rh;
-            lh.name += rh.ToString("+0;-#");
+            lh.formula += rh.ToString("+0;-#");
             return lh;
         }
 

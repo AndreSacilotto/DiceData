@@ -9,5 +9,5 @@ namespace Dices
         public T[][] ToArray() => list.ToArray();
     }
 
-    public class ReturnDiscoveries : ReturnFinds<RollData> { }
+    public class ReturnDiscoveries : ReturnFinds<SimpleRollData> { }
 }

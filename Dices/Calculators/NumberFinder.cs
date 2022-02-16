@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
-using static Dices.Constants;
+using static Dices.DiceString;
 
 namespace Dices
 {

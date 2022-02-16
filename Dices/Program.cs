@@ -1,7 +1,9 @@
 ﻿using Dices;
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
+using static System.Console;
 
 class Program
 {
@@ -22,12 +24,30 @@ class Program
     {
         Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
 
-        //int min = 5;
-        //int max = 32;
-        //RollFinder.Print(min, max, 3, 5);
+#if false
+        int min = 5;
+        int max = 30;
+        int depth = 3;
 
-
+        int end = max + 6;
+        for (; max <= end; max += 2)
+        {
+            Console.WriteLine("################ " + ((min + max) / 2f).ToString("0.0") + " ################");
+            for (int d = 1; d <= depth; d++)
+                RollFinder.Print(min, max, d, 5, 0);
+        }
+#elif false
         while (true)
-            DiceRollCommand.ReadConsole(true);
+            RollCommand.ReadConsole(true);
+#elif true
+        var roll = Statistics.RollFromString("D6 + D10-2");
+        var seq = Statistics.RollMany(roll, 10000000);
+        var items = Statistics.Apparitions(seq);
+
+        foreach (var (key, count, percent) in items)
+            WriteLine(key + "\t" + count + "\t" + percent.ToString("0.0%"));
+
+#endif
+
     }
 }

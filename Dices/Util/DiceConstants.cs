@@ -2,15 +2,8 @@
 
 namespace Dices
 {
-    public static class Constants
+    public static class DiceConstants
     {
-        public const string PLUS_SEPARATOR = " + ";
-        public const string LESS_SEPARATOR = " - ";
-
-        public const string PLUS_MINUS = "+0;-0";
-        public const string PLUS_MINUS_SPACE = " + 0; - 0";
-        public const string PLUS_MINUSF = "+0.0#;-0.0#";
-
         public const int MAX_TIMES = 10;
         public const int HALF_TIMES = 5;
         //public const int DICE_STEP = 2;

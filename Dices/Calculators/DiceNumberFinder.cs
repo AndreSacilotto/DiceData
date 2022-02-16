@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
-using static Dices.Constants;
+using static Dices.DiceConstants;
+using static Dices.DiceString;
 
 namespace Dices
 {
@@ -36,12 +37,12 @@ namespace Dices
         public static ReturnDiscoveries CombPlus(int target, int diceQuant, int diceTimes = HALF_TIMES, int maxMod = HALF_TIMES)
         {
             var rc = new ReturnDiscoveries();
-            var buffer = new RollData[diceQuant];
+            var buffer = new SimpleRollData[diceQuant];
             CombPlusRecursive(rc, buffer, diceTimes, maxMod, target, 0, 0);
             return rc;
         }
 
-        private static void CombPlusRecursive(ReturnDiscoveries rc, RollData[] buffer, int maxTimes, int maxMod, int target, int index, int start)
+        private static void CombPlusRecursive(ReturnDiscoveries rc, SimpleRollData[] buffer, int maxTimes, int maxMod, int target, int index, int start)
         {
             if (index >= buffer.Length)
                 return;
@@ -62,7 +63,7 @@ namespace Dices
                         {
                             buffer[index].mod = m;
                             if (sum + m == target)
-                                rc.AddComb((RollData[])buffer.Clone());
+                                rc.AddComb((SimpleRollData[])buffer.Clone());
                         }
                     }
                     CombPlusRecursive(rc, buffer, maxTimes, maxMod, target, index + 1, i + 1);
