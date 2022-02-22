@@ -90,14 +90,13 @@ namespace Dices
         }
         
         public static double Average(IEnumerable<int> sequence) => sequence.Average();
-        public static double Variance(IEnumerable<int> sequence, double? average = null)
+        public static double Variance(IEnumerable<int> sequence)
         {
-            if (!average.HasValue)
-                average = Average(sequence);
+            var average = Average(sequence);
             int end = sequence.Count();
             double variance = 0;
             foreach (var item in sequence)
-                variance += Math.Pow(item - average.Value, 2);
+                variance += Math.Pow(item - average, 2);
             return variance / end;
         }
         public static double StandardDeviation(IEnumerable<int> sequence, bool isPopulation = false)

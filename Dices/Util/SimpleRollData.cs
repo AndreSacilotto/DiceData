@@ -57,7 +57,7 @@ namespace Dices
                 return mod;
 
             int result = 0;
-            int max = (int)dice;
+            int max = (int)dice+1;
             for (int i = 0; i < times; i++)
                 result += rng.Next(1, max);
             return result + mod;

@@ -5,20 +5,12 @@ namespace Dices
 {
     public static class RollCommand
     {
-        public static DiceData Run(string rollString)
-        {
-            string[] rollsArr = DiceString.SeparateRoll(rollString);
-            if (rollsArr != null)
-                return ReadRoll(rollsArr);
-            return DiceData.Zero;
-        }
-
         public static void ReadConsole(bool setClipboard = false)
         {
             var str = Console.ReadLine();
             if (!string.IsNullOrEmpty(str))
             {
-                var data = Run(str);
+                var data = DiceDataFromString(str);
                 Console.WriteLine(data.ToTextAv());
                 if (setClipboard)
                     Clipboard.PushString(data.ToExcelAv());
@@ -26,7 +18,15 @@ namespace Dices
             }
         }
 
-        public static DiceData DieFromString(in string rollStr)
+        public static DiceData DiceDataFromString(string rollString)
+        {
+            string[] rollsArr = DiceString.SeparateRoll(rollString);
+            if (rollsArr != null)
+                return ReadRoll(rollsArr);
+            return DiceData.Zero;
+        }
+
+        private static DiceData DieFromString(in string rollStr)
         {
             var sep = Regex.Split(rollStr, @"d", RegexOptions.IgnoreCase);
             if (!int.TryParse(sep[0], out var times))
